@@ -15,10 +15,26 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import path, include
+from django.urls import include, path
 
+from rest_framework.permissions import AllowAny
+
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title='OrdersList',
+        default_version='v1',
+        description='About orders',
+        contact=openapi.Contact(email='admin@gmail.com')
+    ),
+    public=True,
+    permission_classes=[AllowAny,]
+)
 urlpatterns = [
     path('orders', include('apps.orders.urls')),
-    path('auth', include('apps.auth.urls'))
+    path('auth', include('apps.auth.urls')),
+    path('doc', schema_view.with_ui('swagger', cache_timeout=0))
 
 ]

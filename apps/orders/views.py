@@ -6,6 +6,9 @@ from apps.orders.serializers import OrdersSerializers
 
 
 class OrdersListCreateView(ListCreateAPIView):
+    """
+       Returns all orders. You can apply ordering to all fields and pagination
+    """
     queryset = OrdersModel.objects.all()
     serializer_class = OrdersSerializers
     filter_backends = (OrderingFilter,)
@@ -14,5 +17,15 @@ class OrdersListCreateView(ListCreateAPIView):
 
 
 class OrdersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    """
+      get:
+          get order by id
+      patch:
+          partial update order by id
+      put:
+         full update order by id
+      delete:
+         delete order by id
+    """
     queryset = OrdersModel.objects.all()
     serializer_class = OrdersSerializers

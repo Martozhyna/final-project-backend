@@ -27,3 +27,11 @@ python manage.py migrate
 ```
 python manage.py runserver
 ```
+
+<h2>Documentation</h2>
+
+In order to familiarize yourself with the documentation:
+   <ul>
+     <li>start the server</li>
+     <li>go to link <i>localhost:8000/doc</i></li>
+   </ul>

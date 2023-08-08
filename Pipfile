@@ -11,6 +11,7 @@ django-filter = "*"
 django-cors-headers = "*"
 httpie = "*"
 djangorestframework-simplejwt = "*"
+drf-yasg = "*"
 
 [dev-packages]
 isort = "*"

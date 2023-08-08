@@ -58,9 +58,26 @@
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from apps.users.serializers import UserSerializer
 
+from .serializer import TokenPairSerializer
+from .swagger.decorators import auth_register_swagger, token_pair_swagger
 
+
+@auth_register_swagger()
 class AuthRegisterView(CreateAPIView):
+    """
+    Register new user
+    """
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
+
+
+@token_pair_swagger()
+class TokenPairView(TokenObtainPairView):
+    """
+      Login user
+    """
+    serializer_class = TokenPairSerializer

@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'httpie',
     'rest_framework_simplejwt',
-    
+    'drf_yasg',
 
 
 
