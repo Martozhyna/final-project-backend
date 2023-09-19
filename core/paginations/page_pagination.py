@@ -15,5 +15,5 @@ class PagePagination(PageNumberPagination):
             'total_pages': total_pages,
             'prev': self.get_previous_link(),
             'next': self.get_next_link(),
-            'data': data
+            'results': data
         })

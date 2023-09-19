@@ -1,11 +1,13 @@
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import AllowAny
 
 from apps.orders.models import OrdersModel
 from apps.orders.serializers import OrdersSerializers
 
 
 class OrdersListCreateView(ListCreateAPIView):
+    # permission_classes = (AllowAny,)
     """
        Returns all orders. You can apply ordering to all fields and pagination
     """
