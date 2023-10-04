@@ -1,4 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.db import models
+
+from apps.users.models import UserModel as User
+
+UserModel: User = get_user_model()
 
 
 class OrdersModel(models.Model):
@@ -20,5 +25,9 @@ class OrdersModel(models.Model):
     utm = models.CharField(max_length=100, blank=True, null=True)
     msg = models.CharField(max_length=100, blank=True, null=True)
     status = models.CharField(max_length=15, blank=True, null=True)
-    manager = models.CharField(max_length=25, blank=True, null=True)
+    manager = models.CharField(max_length=20, blank=True, null=True)
     group = models.CharField(max_length=10, blank=True, null=True)
+    user = models.ForeignKey(UserModel, on_delete=models.SET_NULL, blank=True, null=True, related_name='orders')
+
+    def __str__(self):
+        return self.manager

@@ -35,6 +35,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('orders', include('apps.orders.urls')),
     path('auth', include('apps.auth.urls')),
-    path('doc', schema_view.with_ui('swagger', cache_timeout=0))
+    path('doc', schema_view.with_ui('swagger', cache_timeout=0)),
+    path('comments', include('apps.comments.urls'))
 
 ]
