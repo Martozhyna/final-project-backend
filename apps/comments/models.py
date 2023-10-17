@@ -9,5 +9,5 @@ class CommentModel(models.Model):
         ordering = ('id',)
 
     comment = models.CharField(max_length=100)
-    order = models.ForeignKey(OrdersModel, on_delete=models.CASCADE, related_name='comments')
-    created_at = models.DateTimeField(auto_now_add=True)
+    order = models.ForeignKey(OrdersModel, on_delete=models.SET_NULL, blank=True, null=True, related_name='comments')
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
