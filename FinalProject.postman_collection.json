@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"user4@gmail.com\",\r\n    \"password\":\"user\",\r\n    \"profile\":{\r\n        \"name\":\"User\",\r\n        \"surname\":\"Userov\",\r\n        \"age\":14\r\n    }\r\n}",
+							"raw": "{\r\n\"email\":\"user@gmail.com\",\r\n\"password\":\"user\",\r\n\"name\": \"User\",\r\n\"surname\": \"Userov\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -67,6 +67,18 @@
 									"key": "password",
 									"value": "admin",
 									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "user@gmail.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "user",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
@@ -164,17 +176,19 @@
 								{
 									"key": "email",
 									"value": "admin@gmail.com",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "password",
 									"value": "admin",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8000/orders?ordering=name",
+							"raw": "http://localhost:8000/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -186,7 +200,18 @@
 							"query": [
 								{
 									"key": "ordering",
-									"value": "name"
+									"value": "name",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "4",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "id",
+									"disabled": true
 								}
 							]
 						}
@@ -229,12 +254,223 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "create comment by orderID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "comment",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/orders/501/comment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"orders",
+								"501",
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all comments by orderID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/orders/503/comment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"orders",
+								"503",
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Rob",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "Tetris",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "yoooh@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "0678649710",
+									"type": "text"
+								},
+								{
+									"key": "age",
+									"value": "67",
+									"type": "text"
+								},
+								{
+									"key": "course",
+									"value": "PCX",
+									"type": "text"
+								},
+								{
+									"key": "course_format",
+									"value": "online",
+									"type": "text"
+								},
+								{
+									"key": "course_type",
+									"value": "pro",
+									"type": "text"
+								},
+								{
+									"key": "sum",
+									"value": "30000",
+									"type": "text"
+								},
+								{
+									"key": "alreadyPaid",
+									"value": "15000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "users",
 			"item": []
+		},
+		{
+			"name": "comments",
+			"item": [
+				{
+					"name": "get all comments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "comment",
+									"value": "I will",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"comments"
+							],
+							"query": [
+								{
+									"key": "comment",
+									"value": "I will",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
