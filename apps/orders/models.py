@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from apps.users.models import UserModel as User
+from apps.groups.models import GroupsModel
 from core.enums.regex_enum import RegEx
 from django.core import validators as V
 
@@ -32,7 +33,7 @@ class OrdersModel(models.Model):
     status = models.CharField(max_length=15, blank=True, null=True,
                               validators=[V.RegexValidator(RegEx.STATUS.pattern, RegEx.STATUS.msg)])
     manager = models.CharField(max_length=20, blank=True, null=True)
-    group = models.CharField(max_length=10, blank=True, null=True)
+    group = models.ForeignKey(GroupsModel, on_delete=models.SET_NULL, related_name='orders', blank=True, null=True)
     user = models.ForeignKey(UserModel, on_delete=models.SET_NULL, blank=True, null=True, related_name='orders')
 
     def __str__(self):

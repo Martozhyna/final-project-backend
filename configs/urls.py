@@ -36,6 +36,7 @@ urlpatterns = [
     path('orders', include('apps.orders.urls')),
     path('auth', include('apps.auth.urls')),
     path('doc', schema_view.with_ui('swagger', cache_timeout=0)),
-    path('comments', include('apps.comments.urls'))
+    path('comments', include('apps.comments.urls')),
+    path('groups', include('apps.groups.urls')),
 
 ]

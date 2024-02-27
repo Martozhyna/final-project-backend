@@ -1,19 +1,19 @@
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import CreateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from apps.comments.serializers import CommentSerializer
-from apps.orders.models import OrdersModel, UserModel
-from apps.orders.serializers import OrdersSerializers, OrderManagerSerializer
-from apps.users.serializers import UserSerializer
+from apps.orders.models import OrdersModel
+from apps.orders.serializers import OrdersSerializers
 
 
 class OrdersListCreateView(ListCreateAPIView):
-    # permission_classes = (AllowAny,)
     """
-       Returns all orders. You can apply ordering to all fields and pagination
+    get:
+          Returns all orders. You can apply ordering to all fields and pagination
+    post:
+          Create new orders
     """
     queryset = OrdersModel.objects.all()
     serializer_class = OrdersSerializers

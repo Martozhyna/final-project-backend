@@ -2,11 +2,17 @@ from rest_framework import serializers
 
 from apps.comments.serializers import CommentSerializer
 from apps.orders.models import OrdersModel
-from apps.users.serializers import UserSerializer
+from core.dataclasses.group_dataclass import Group
+
+
+class GroupsRelatedFieldSerializer(serializers.RelatedField):
+    def to_representation(self, value: Group):
+        return {'id': value.id, 'title': value.title}
 
 
 class OrdersSerializers(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
+    group = GroupsRelatedFieldSerializer(read_only=True)
 
     class Meta:
         model = OrdersModel
