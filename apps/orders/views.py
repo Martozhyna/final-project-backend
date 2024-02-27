@@ -56,9 +56,6 @@ class OrdersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             return Response('Ви не можете редагувати дану заявку', status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
 class OrderCreateListCommentsView(CreateAPIView):
     """
        get:

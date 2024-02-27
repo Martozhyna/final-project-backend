@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from apps.users.models import UserModel as User
+from core.enums.regex_enum import RegEx
+from django.core import validators as V
 
 UserModel: User = get_user_model()
 
@@ -16,15 +18,19 @@ class OrdersModel(models.Model):
     email = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=12, blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)
-    course = models.CharField(max_length=10, blank=True, null=True)
-    course_format = models.CharField(max_length=15, blank=True, null=True)
-    course_type = models.CharField(max_length=100, blank=True, null=True)
+    course = models.CharField(max_length=10, blank=True, null=True,
+                              validators=[V.RegexValidator(RegEx.COURSE.pattern, RegEx.COURSE.msg)])
+    course_format = models.CharField(max_length=15, blank=True, null=True, validators=[
+        V.RegexValidator(RegEx.COURSE_FORMAT.pattern, RegEx.COURSE_FORMAT.msg)])
+    course_type = models.CharField(max_length=100, blank=True, null=True,
+                                   validators=[V.RegexValidator(RegEx.COURSE_TYPE.pattern, RegEx.COURSE_TYPE.msg)])
     sum = models.IntegerField(blank=True, null=True)
     alreadyPaid = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(max_length=6, blank=True, null=True)
     utm = models.CharField(max_length=100, blank=True, null=True)
     msg = models.CharField(max_length=100, blank=True, null=True)
-    status = models.CharField(max_length=15, blank=True, null=True)
+    status = models.CharField(max_length=15, blank=True, null=True,
+                              validators=[V.RegexValidator(RegEx.STATUS.pattern, RegEx.STATUS.msg)])
     manager = models.CharField(max_length=20, blank=True, null=True)
     group = models.CharField(max_length=10, blank=True, null=True)
     user = models.ForeignKey(UserModel, on_delete=models.SET_NULL, blank=True, null=True, related_name='orders')
