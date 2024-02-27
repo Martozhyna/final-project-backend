@@ -1,4 +1,3 @@
-
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import CreateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
@@ -44,6 +43,21 @@ class OrdersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     queryset = OrdersModel.objects.all()
     serializer_class = OrdersSerializers
 
+    def patch(self, request, *args, **kwargs):
+        order = self.get_object()  # Отримуємо екземпляр замовлення
+        orders_user = order.manager  # хто є менеджером в заявці
+        orders_manager = self.request.user.surname  # залогінений юзер
+        if not orders_user or orders_user == orders_manager:
+            serializer = OrdersSerializers(order, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response('Ви не можете редагувати дану заявку', status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 
 class OrderCreateListCommentsView(CreateAPIView):
     """
@@ -82,11 +96,3 @@ class OrderCreateListCommentsView(CreateAPIView):
         order = self.get_object()
         serializer = self.serializer_class(order.comments, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
-
-
-
-
-
-
-
-
