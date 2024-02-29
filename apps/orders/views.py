@@ -4,8 +4,10 @@ from rest_framework.generics import CreateAPIView, ListCreateAPIView, RetrieveUp
 from rest_framework.response import Response
 
 from apps.comments.serializers import CommentSerializer
+from apps.groups.models import GroupsModel
 from apps.orders.models import OrdersModel
 from apps.orders.serializers import OrdersSerializers
+from apps.groups.serializers import GroupsSerializer
 
 
 class OrdersListCreateView(ListCreateAPIView):
@@ -47,11 +49,31 @@ class OrdersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         order = self.get_object()  # Отримуємо екземпляр замовлення
         orders_user = order.manager  # хто є менеджером в заявці
         orders_manager = self.request.user.surname  # залогінений юзер
-        if not orders_user or orders_user == orders_manager:
+        group_title = request.data.get('group', False) # група яку ми відправляємо
+        all_groups = GroupsModel.objects.all()
+        serializer_group = GroupsSerializer
+        print(all_groups.values('title'))
+
+        if (not orders_user or orders_user == orders_manager) and group_title:
+            try:
+                group = GroupsModel.objects.get(title=group_title)
+                order.group = group
+                order.save()
+                serializer = OrdersSerializers(order)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except GroupsModel.DoesNotExist:
+                # Якщо група не існує, повертаємо помилку і список наявних груп
+                all_groups = GroupsModel.objects.all()
+                serializer = serializer_group(all_groups, many=True)
+                return Response({'error': 'Група не існує', 'available_groups': serializer.data},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        if (not orders_user or orders_user == orders_manager) and not group_title:
             serializer = OrdersSerializers(order, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+
         else:
             return Response('Ви не можете редагувати дану заявку', status=status.HTTP_400_BAD_REQUEST)
 
