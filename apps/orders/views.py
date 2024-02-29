@@ -50,9 +50,7 @@ class OrdersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         orders_user = order.manager  # хто є менеджером в заявці
         orders_manager = self.request.user.surname  # залогінений юзер
         group_title = request.data.get('group', False) # група яку ми відправляємо
-        all_groups = GroupsModel.objects.all()
         serializer_group = GroupsSerializer
-        print(all_groups.values('title'))
 
         if (not orders_user or orders_user == orders_manager) and group_title:
             try:
