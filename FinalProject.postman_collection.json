@@ -188,7 +188,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8000/orders",
+							"raw": "http://localhost:8000/orders?ordering=-surname&page=4",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -200,13 +200,11 @@
 							"query": [
 								{
 									"key": "ordering",
-									"value": "name",
-									"disabled": true
+									"value": "-surname"
 								},
 								{
 									"key": "page",
-									"value": "4",
-									"disabled": true
+									"value": "4"
 								},
 								{
 									"key": "ordering",
@@ -275,13 +273,13 @@
 							"formdata": [
 								{
 									"key": "comment",
-									"value": "2",
+									"value": "status in work",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8000/orders/501/comment",
+							"raw": "http://localhost:8000/orders/7/comment",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -289,7 +287,7 @@
 							"port": "8000",
 							"path": [
 								"orders",
-								"501",
+								"7",
 								"comment"
 							]
 						}
@@ -312,7 +310,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/orders/503/comment",
+							"raw": "http://localhost:8000/orders/7/comment",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -320,7 +318,7 @@
 							"port": "8000",
 							"path": [
 								"orders",
-								"503",
+								"7",
 								"comment"
 							]
 						}
@@ -410,6 +408,46 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "patch order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "status",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/orders/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"orders",
+								"10"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -465,6 +503,79 @@
 									"value": "I will",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "groups",
+			"item": [
+				{
+					"name": "get all groups",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/groups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new group",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "SEP-2024",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/groups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"groups"
 							]
 						}
 					},
