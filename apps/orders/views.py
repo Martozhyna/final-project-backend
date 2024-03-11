@@ -27,7 +27,6 @@ class OrdersListCreateView(ListCreateAPIView):
     ordering_fields = ['id', 'name', 'surname', 'email', 'phone', 'age', 'course', 'course_format', 'course_type',
                        'status', 'sum', 'alreadyPaid', 'created_at']
 
-
     def post(self, request, *args, **kwargs):
         data = self.request.data
         serializer = OrdersSerializers(data=data)
@@ -128,3 +127,21 @@ class OrderCreateListCommentsView(CreateAPIView):
         order = self.get_object()
         serializer = self.serializer_class(order.comments, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
+
+
+class OrdersUserListView(ListAPIView):
+    queryset = OrdersModel.objects.all()
+    serializer_class = OrdersSerializers
+    filterset_class = OrderFilter
+    filter_backends = (OrderingFilter, filters.DjangoFilterBackend,)
+    ordering_fields = ['id', 'name', 'surname', 'email', 'phone', 'age', 'course', 'course_format', 'course_type',
+                       'status', 'sum', 'alreadyPaid', 'created_at']
+
+    def get_queryset(self):
+        orders_manager = self.request.user.surname
+        return OrdersModel.objects.filter(manager=orders_manager)
+
+
+
+
+
