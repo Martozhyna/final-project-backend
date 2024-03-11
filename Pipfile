@@ -13,7 +13,6 @@ httpie = "*"
 djangorestframework-simplejwt = "*"
 drf-yasg = "*"
 
-
 [dev-packages]
 isort = "*"
 

@@ -1,10 +1,12 @@
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.response import Response
+from django_filters import rest_framework as filters
 
 from apps.comments.serializers import CommentSerializer
 from apps.groups.models import GroupsModel
+from apps.orders.filters import OrderFilter
 from apps.orders.models import OrdersModel
 from apps.orders.serializers import OrdersSerializers
 from apps.groups.serializers import GroupsSerializer
@@ -18,10 +20,13 @@ class OrdersListCreateView(ListCreateAPIView):
           Create new orders
     """
     queryset = OrdersModel.objects.all()
+
     serializer_class = OrdersSerializers
-    filter_backends = (OrderingFilter,)
+    filterset_class = OrderFilter
+    filter_backends = (OrderingFilter, filters.DjangoFilterBackend,)
     ordering_fields = ['id', 'name', 'surname', 'email', 'phone', 'age', 'course', 'course_format', 'course_type',
                        'status', 'sum', 'alreadyPaid', 'created_at']
+
 
     def post(self, request, *args, **kwargs):
         data = self.request.data
@@ -49,15 +54,25 @@ class OrdersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         order = self.get_object()  # Отримуємо екземпляр замовлення
         orders_user = order.manager  # хто є менеджером в заявці
         orders_manager = self.request.user.surname  # залогінений юзер
-        group_title = request.data.get('group', False) # група яку ми відправляємо
+        group_title = request.data.get('group', False)  # група яку ми відправляємо
         serializer_group = GroupsSerializer
 
         if (not orders_user or orders_user == orders_manager) and group_title:
             try:
-                group = GroupsModel.objects.get(title=group_title)
+                group = GroupsModel.objects.get(
+                    title=group_title)  # група яка є в списку і співпадає з тою, що ми відправляємо
+                print(group.id)
+                if group == order.group:
+                    serializer = OrdersSerializers(order, data=request.data, partial=True)
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_200_OK)
                 order.group = group
                 order.save()
-                serializer = OrdersSerializers(order)
+                # serializer = OrdersSerializers(order)
+                serializer = OrdersSerializers(order, data=request.data, partial=True)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except GroupsModel.DoesNotExist:
                 # Якщо група не існує, повертаємо помилку і список наявних груп
