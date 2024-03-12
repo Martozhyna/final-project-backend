@@ -30,7 +30,7 @@ class OrdersListCreateView(ListCreateAPIView):
     filterset_class = OrderFilter
     filter_backends = (OrderingFilter, filters.DjangoFilterBackend,)
     ordering_fields = ['id', 'name', 'surname', 'email', 'phone', 'age', 'course', 'course_format', 'course_type',
-                       'status', 'sum', 'alreadyPaid', 'created_at']
+                       'status', 'sum', 'alreadyPaid', 'created_at', 'manager', 'group']
 
     def post(self, request, *args, **kwargs):
         data = self.request.data
