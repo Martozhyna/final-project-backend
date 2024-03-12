@@ -12,6 +12,8 @@ django-cors-headers = "*"
 httpie = "*"
 djangorestframework-simplejwt = "*"
 drf-yasg = "*"
+pandas = "*"
+openpyxl = "*"
 
 [dev-packages]
 isort = "*"

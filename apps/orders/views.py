@@ -1,14 +1,19 @@
+import os
+import tempfile
+
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import CreateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
+import pandas as pd
+from django.http import HttpResponse
 
 from apps.comments.serializers import CommentSerializer
 from apps.groups.models import GroupsModel
 from apps.orders.filters import OrderFilter
 from apps.orders.models import OrdersModel
-from apps.orders.serializers import OrdersSerializers
+from apps.orders.serializers import OrdersSerializers, OrdersExelSerializer
 from apps.groups.serializers import GroupsSerializer
 
 
@@ -130,6 +135,10 @@ class OrderCreateListCommentsView(CreateAPIView):
 
 
 class OrdersUserListView(ListAPIView):
+    """
+           get:
+              get only my orders (with ordering, filter and pages)
+    """
     queryset = OrdersModel.objects.all()
     serializer_class = OrdersSerializers
     filterset_class = OrderFilter
@@ -142,6 +151,28 @@ class OrdersUserListView(ListAPIView):
         return OrdersModel.objects.filter(manager=orders_manager)
 
 
+class OrdersExelTable(ListAPIView):
+    """
+              get:
+                 get exel tables
+    """
+    queryset = OrdersModel.objects.all()
+    filterset_class = OrderFilter
+    filter_backends = (OrderingFilter, filters.DjangoFilterBackend,)
+    ordering_fields = ['id', 'name', 'surname', 'email', 'phone', 'age', 'course', 'course_format', 'course_type',
+                       'status', 'sum', 'alreadyPaid', 'created_at']
 
+    def get(self, *args, **kwargs):
+        orders = OrdersModel.objects.all()  # отримуємо всі заявки з бази даних
+        serializer = OrdersExelSerializer(instance=orders, many=True)  # перетворюємо їх у формат JSON
+        data = serializer.data  # усі змінені замовлення
+        df = pd.DataFrame(data)  # робимо exel табличку
+        temp_dir = tempfile.mkdtemp()  # cтворюємо тимчасовий каталог для збереження таблички
+        excel_file_path = os.path.join(temp_dir, 'excel_file.xlsx')  # шлях до каталога
+        df.to_excel(excel_file_path, index=False)  # записуємо дані в табличку без індексів
+        with open(excel_file_path, 'rb') as excel_file:
+            response = HttpResponse(excel_file.read(),
+                                    content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=orders.xlsx'
 
-
+        return response  # повертаємо HTTP-відповідь, яка буде містити Excel-файл, який користувач може завантажити з браузера

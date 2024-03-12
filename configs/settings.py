@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # 'httpie',
     'rest_framework_simplejwt',
     'drf_yasg',
+    'pandas',
 
 
     # my_apps

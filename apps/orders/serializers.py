@@ -10,6 +10,22 @@ class GroupsRelatedFieldSerializer(serializers.RelatedField):
         return {'id': value.id, 'title': value.title}
 
 
+class GroupTitleSerializer(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.title
+
+
+class OrdersExelSerializer(serializers.ModelSerializer):
+    group = GroupTitleSerializer(read_only=True)
+
+    class Meta:
+        model = OrdersModel
+        fields = (
+            'id', 'name', 'surname', 'email', 'phone', 'age', 'course', 'course_format', 'course_type', 'status', 'sum',
+            'alreadyPaid', 'group', 'created_at', 'manager', 'utm', 'msg'
+        )
+
+
 class OrdersSerializers(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
     group = GroupsRelatedFieldSerializer(read_only=True)
