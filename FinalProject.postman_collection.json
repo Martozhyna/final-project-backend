@@ -48,7 +48,8 @@
 									"pm.environment.set(\"access\", res.access);\r",
 									"pm.environment.set(\"refresh\", res.refresh);"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -188,7 +189,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8000/orders?ordering=-surname&page=4",
+							"raw": "http://localhost:8000/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -200,15 +201,17 @@
 							"query": [
 								{
 									"key": "ordering",
-									"value": "-surname"
-								},
-								{
-									"key": "page",
-									"value": "4"
-								},
-								{
-									"key": "ordering",
 									"value": "id",
+									"disabled": true
+								},
+								{
+									"key": "start_date",
+									"value": "2022-06-01",
+									"disabled": true
+								},
+								{
+									"key": "end_date",
+									"value": "2021-11-02",
 									"disabled": true
 								}
 							]
@@ -232,7 +235,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/orders/20",
+							"raw": "http://localhost:8000/orders/497",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -240,7 +243,7 @@
 							"port": "8000",
 							"path": [
 								"orders",
-								"20"
+								"497"
 							],
 							"query": [
 								{
@@ -428,14 +431,25 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "status",
-									"value": "",
+									"key": "group",
+									"value": "SEP-2024",
 									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "ifa",
+									"type": "text"
+								},
+								{
+									"key": "age",
+									"value": "34",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8000/orders/10",
+							"raw": "http://localhost:8000/orders/497",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -443,7 +457,78 @@
 							"port": "8000",
 							"path": [
 								"orders",
-								"10"
+								"497"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get my orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/orders/my?ordering=id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"orders",
+								"my"
+							],
+							"query": [
+								{
+									"key": "ordering",
+									"value": "id"
+								},
+								{
+									"key": "name",
+									"value": "ав",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get exel table",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/orders/exel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"orders",
+								"exel"
 							]
 						}
 					},
@@ -562,7 +647,7 @@
 							"formdata": [
 								{
 									"key": "title",
-									"value": "SEP-2024",
+									"value": "SEP-2023",
 									"type": "text"
 								}
 							]
