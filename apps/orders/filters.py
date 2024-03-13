@@ -42,7 +42,7 @@ class OrderFilter(filters.FilterSet):
         ('Disagree', 'Disagree'),
         ('Dubbing', 'Dubbing'),
     ], coerce=str)
-    group = filters.CharFilter(field_name='group', lookup_expr='icontains')
+    group = filters.CharFilter(field_name='group__title', lookup_expr='icontains')
     start_date = filters.DateFilter(field_name='created_at', lookup_expr='date__gt')
     end_date = filters.DateFilter(field_name='created_at', lookup_expr='date__lte')
 
