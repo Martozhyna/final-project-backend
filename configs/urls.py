@@ -38,5 +38,6 @@ urlpatterns = [
     path('doc', schema_view.with_ui('swagger', cache_timeout=0)),
     path('comments', include('apps.comments.urls')),
     path('groups', include('apps.groups.urls')),
+    path('users', include('apps.users.urls')),
 
 ]
