@@ -45,10 +45,11 @@ class OrderFilter(filters.FilterSet):
     group = filters.CharFilter(field_name='group__title', lookup_expr='icontains')
     start_date = filters.DateFilter(field_name='created_at', lookup_expr='date__gt')
     end_date = filters.DateFilter(field_name='created_at', lookup_expr='date__lte')
+    manager = filters.CharFilter(field_name='manager', lookup_expr='contains')
 
 
 
     class Meta:
         model = OrdersModel
         fields = ('name', 'surname', 'email', 'phone', 'age', 'course',
-                  'course_format', 'course_type', 'status', 'group', 'start_date', 'end_date')
+                  'course_format', 'course_type', 'status', 'group', 'start_date', 'end_date', 'manager')
