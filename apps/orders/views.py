@@ -151,7 +151,7 @@ class OrdersUserListView(ListAPIView):
         return OrdersModel.objects.filter(manager=orders_manager)
 
 
-class OrdersExelTable(ListAPIView):
+class OrdersExcelTable(ListAPIView):
     """
               get:
                  get exel tables
