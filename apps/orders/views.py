@@ -157,10 +157,6 @@ class OrdersExelTable(ListAPIView):
                  get exel tables
     """
     queryset = OrdersModel.objects.all()
-    filterset_class = OrderFilter
-    filter_backends = (OrderingFilter, filters.DjangoFilterBackend,)
-    ordering_fields = ['id', 'name', 'surname', 'email', 'phone', 'age', 'course', 'course_format', 'course_type',
-                       'status', 'sum', 'alreadyPaid', 'created_at', 'manager', 'group']
 
     def get(self, *args, **kwargs):
         orders = OrdersModel.objects.all()  # отримуємо всі заявки з бази даних
