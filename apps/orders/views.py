@@ -223,3 +223,35 @@ class OrdersExcelTable(ListAPIView):
             response['Content-Disposition'] = 'attachment; filename=orders.xlsx'
 
         return response
+
+
+class OrdersStatusStatisticView(ListAPIView):
+    queryset = OrdersModel.objects.all()
+    serializer_class = OrdersSerializers
+
+    def get(self, request, *args, **kwargs):
+        data = OrdersModel.objects.all()
+        params_dict = self.request.query_params.dict()
+
+        order_statistic = []
+        total = len(data)
+        agree = 0
+        in_work = 0
+        disagree = 0
+        dubbing = 0
+        new = 0
+        for i in data:
+            if i.status == 'Agree':
+                agree += 1
+            if i.status == 'In work':
+                in_work += 1
+            if i.status == 'Disagree':
+                disagree += 1
+            if i.status == 'Dubbing':
+                dubbing += 1
+            if i.status == 'New':
+                new += 1
+        order_statistic.append(
+            {'Total': total, 'Agree': agree, 'Disagree': disagree, 'In work': in_work, 'Dubbing': dubbing, 'New': new})
+
+        return Response(order_statistic)
