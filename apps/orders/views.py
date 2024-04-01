@@ -9,7 +9,7 @@ from django_filters import rest_framework as filters
 import pandas as pd
 from django.http import HttpResponse
 from django.db.models import Q
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from apps.comments.serializers import CommentSerializer
 from apps.groups.models import GroupsModel
@@ -164,7 +164,6 @@ class OrdersExcelTable(ListAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        # Отримати параметри фільтрації з URL
         name = self.request.query_params.get('name')
         surname = self.request.query_params.get('surname')
         email = self.request.query_params.get('email')
@@ -179,7 +178,6 @@ class OrdersExcelTable(ListAPIView):
         end_data = self.request.query_params.get('end_date')
         manager = self.request.query_params.get('manager')
 
-        # Застосувати фільтри до queryset
         if course_type:
             queryset = queryset.filter(course_type=course_type)
         if course_format:
@@ -202,26 +200,26 @@ class OrdersExcelTable(ListAPIView):
             queryset = queryset.filter(group=group)
         if start_data:
             start_date = datetime.strptime(start_data, '%Y-%m-%d')
-            queryset = queryset.filter(created_at__gt=start_date)
+            queryset = queryset.filter(created_at__gte=start_date)
         if end_data:
-            end_date = datetime.strptime(end_data, '%Y-%m-%d')
-            queryset = queryset.filter(created_at__lte=end_date)
+            end_date = datetime.strptime(end_data, '%Y-%m-%d') + timedelta(days=1)
+            queryset = queryset.filter(created_at__lt=end_date)
         if manager:
             queryset = queryset.filter(manager=manager)
 
         return queryset
 
     def get(self, *args, **kwargs):
-        orders = self.get_queryset()  # фільтруємо заявки на основі параметрів
-        serializer = OrdersExelSerializer(instance=orders, many=True)  # перетворюємо їх у формат JSON
-        data = serializer.data  # усі змінені замовлення
-        df = pd.DataFrame(data)  # робимо excel табличку
-        temp_dir = tempfile.mkdtemp()  # створюємо тимчасовий каталог для збереження таблички
-        excel_file_path = os.path.join(temp_dir, 'excel_file.xlsx')  # шлях до каталогу
-        df.to_excel(excel_file_path, index=False)  # записуємо дані в табличку без індексів
+        orders = self.get_queryset()
+        serializer = OrdersExelSerializer(instance=orders, many=True)
+        data = serializer.data
+        df = pd.DataFrame(data)
+        temp_dir = tempfile.mkdtemp()
+        excel_file_path = os.path.join(temp_dir, 'excel_file.xlsx')
+        df.to_excel(excel_file_path, index=False)
         with open(excel_file_path, 'rb') as excel_file:
             response = HttpResponse(excel_file.read(),
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename=orders.xlsx'
 
-        return response  # повертаємо HTTP-відповідь, яка буде містити Excel-файл, який користувач може завантажити з браузера
+        return response
