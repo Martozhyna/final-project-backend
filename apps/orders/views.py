@@ -252,6 +252,6 @@ class OrdersStatusStatisticView(ListAPIView):
             if i.status == 'New':
                 new += 1
         order_statistic.append(
-            {'Total': total, 'Agree': agree, 'Disagree': disagree, 'In work': in_work, 'Dubbing': dubbing, 'New': new})
+            {'total': total, 'agree': agree, 'disagree': disagree, 'in_work': in_work, 'dubbing': dubbing, 'new': new})
 
         return Response(order_statistic)

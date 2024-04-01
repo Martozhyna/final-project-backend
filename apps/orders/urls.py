@@ -9,6 +9,6 @@ urlpatterns = [
     path('/<int:pk>/comment', OrderCreateListCommentsView.as_view(), name='orders_create_list_comments'),
     path('/my', OrdersUserListView.as_view(), name='orders_user_list'),
     path('/excel', OrdersExcelTable.as_view(), name='orders_exel_table'),
-    path('/statistic', OrdersStatusStatisticView.as_view(), name='orders_status_statistic')
+    path('/statistics', OrdersStatusStatisticView.as_view(), name='orders_status_statistic')
 
 ]
