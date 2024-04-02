@@ -231,8 +231,6 @@ class OrdersStatusStatisticView(ListAPIView):
 
     def get(self, request, *args, **kwargs):
         data = OrdersModel.objects.all()
-        params_dict = self.request.query_params.dict()
-
         order_statistic = []
         total = len(data)
         agree = 0
