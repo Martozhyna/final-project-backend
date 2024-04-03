@@ -2,6 +2,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from rest_framework.views import APIView
 
 from apps.orders.models import OrdersModel
 from apps.orders.serializers import OrdersSerializers
@@ -22,22 +23,27 @@ class UsersListView(ListAPIView):
     serializer_class = UserSerializer
 
 
-class UserOrdersStatisticView(RetrieveAPIView):
+class UserOrdersStatisticView(APIView):
     serializer_class = OrdersSerializers
 
     def get(self, request, *args, **kwargs):
-        user_id = self.kwargs['pk']
-        user = UserModel.objects.get(id=user_id)
-        manager_surname = user.surname
-        orders = OrdersModel.objects.filter(manager=manager_surname)
+        users = UserModel.objects.all()
+        statistics = {}
 
-        order_statistic = {
-            'total': orders.count(),
-            'agree': orders.filter(status='Agree').count(),
-            'disagree': orders.filter(status='Disagree').count(),
-            'in_work': orders.filter(status='In work').count(),
-            'dubbing': orders.filter(status='Dubbing').count(),
-            'new': orders.filter(status='New').count()
-        }
+        for user in users:
+            manager_surname = user.surname
+            orders = OrdersModel.objects.filter(manager=manager_surname)
+            user_id = user.id
 
-        return Response(order_statistic)
+            user_statistics = {
+                'total': orders.count(),
+                'agree': orders.filter(status='Agree').count(),
+                'disagree': orders.filter(status='Disagree').count(),
+                'in_work': orders.filter(status='In work').count(),
+                'dubbing': orders.filter(status='Dubbing').count(),
+                'new': orders.filter(status='New').count()
+            }
+
+            statistics[user_id] = user_statistics
+
+        return Response({'statistics': statistics})
