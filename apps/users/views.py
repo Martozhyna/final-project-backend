@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from apps.orders.models import OrdersModel
 from apps.orders.serializers import OrdersSerializers
 from apps.users.serializers import UserSerializer
+from core.permissions.is_superuser import IsSuperuser
 
 UserModel = get_user_model()
 
@@ -47,3 +48,38 @@ class UserOrdersStatisticView(APIView):
             statistics[user_id] = user_statistics
 
         return Response({'statistics': statistics})
+
+
+class UserBanView(GenericAPIView):
+    queryset = UserModel.objects.all()
+    permission_classes = (IsSuperuser,)
+
+    def patch(self, *args, **kwargs):
+        user = self.get_object()
+
+        if user.is_staff:
+            return Response('ви не можете заблокувати самого себе', status=status.HTTP_400_BAD_REQUEST)
+        if user.is_active:
+            user.is_active = False
+            user.save()
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response('цей користувач уже заблокований', status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserUnbanView(GenericAPIView):
+    queryset = UserModel.objects.all()
+    permission_classes = (IsSuperuser,)
+
+    def patch(self, *args, **kwargs):
+        user = self.get_object()
+
+        if user.is_staff:
+            return Response('ви не були заблоковані', status=status.HTTP_400_BAD_REQUEST)
+        if user.is_active:
+            return Response('цей користувач уже розблокований', status=status.HTTP_400_BAD_REQUEST)
+        user.is_active = True
+        user.save()
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
