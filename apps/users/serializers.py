@@ -30,5 +30,5 @@ class UserSerializer(serializers.ModelSerializer):
         user = UserModel.objects.create(**validated_data)
         user.set_password(password)
         user.save()
-        EmailService.register_email(user)
+        # EmailService.register_email(user)
         return user

@@ -23,6 +23,15 @@ class AuthRegisterView(CreateAPIView):
     permission_classes = (AllowAny,)
 
 
+class SendUserActivateTokenView(GenericAPIView):
+    queryset = UserModel.objects.all()
+
+    def get(self, *args, **kwargs):
+        user = self.get_object()
+        EmailService.register_email(user)
+        return Response('лист з активацією було відправлено')
+
+
 class ActivateUserView(GenericAPIView):
     permission_classes = (AllowAny,)
 

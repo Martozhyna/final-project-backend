@@ -1,18 +1,21 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView, GenericAPIView
-from rest_framework.response import Response
-from rest_framework import status
 from django.contrib.auth import get_user_model
+
+from rest_framework import status
+from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from core.permissions.is_superuser import IsSuperuser
 
 from apps.orders.models import OrdersModel
 from apps.orders.serializers import OrdersSerializers
 from apps.users.serializers import UserSerializer
-from core.permissions.is_superuser import IsSuperuser
 
 UserModel = get_user_model()
 
 
 class UserMeView(ListAPIView):
+
     def get(self, *args, **kwargs):
         user = self.request.user
         serializer = UserSerializer(user)
