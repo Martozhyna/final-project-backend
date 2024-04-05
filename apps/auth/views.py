@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from core.services.jwt_service import ActivateToken, JWTService
 
+from apps.auth.serializer import AuthPasswordSerializer
 from apps.users.serializers import UserSerializer
 
 
@@ -23,6 +24,11 @@ class ActivateUserView(GenericAPIView):
         token = kwargs['token']
         user = JWTService.validate_token(token, ActivateToken)
         user.is_active = True
+        data = self.request.data
+        serializer = AuthPasswordSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        user.set_password(data['password'])
+        user.save()
         user.save()
         serializer = UserSerializer(user)
         return Response(serializer.data, status.HTTP_200_OK)
