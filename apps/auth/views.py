@@ -5,6 +5,7 @@ from rest_framework.generics import CreateAPIView, GenericAPIView, get_object_or
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from core.permissions.is_superuser import IsSuperuser
 from core.services.email_service import EmailService
 from core.services.jwt_service import ActivateToken, JWTService, PasswordRecoveryToken
 
@@ -20,11 +21,12 @@ class AuthRegisterView(CreateAPIView):
     Register new user
     """
     serializer_class = UserSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsSuperuser,)
 
 
 class SendUserActivateTokenView(GenericAPIView):
     queryset = UserModel.objects.all()
+    permission_classes = (IsSuperuser,)
 
     def get(self, *args, **kwargs):
         user = self.get_object()
@@ -49,6 +51,8 @@ class ActivateUserView(GenericAPIView):
 
 
 class PasswordRecoveryView(GenericAPIView):
+    permission_classes = (IsSuperuser,)
+
     def post(self, *args, **kwargs):
         data = self.request.data
         user = get_object_or_404(UserModel, email=data['email'])
