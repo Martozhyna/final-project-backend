@@ -37,8 +37,10 @@ class SendUserActivateTokenView(GenericAPIView):
 
     def get(self, *args, **kwargs):
         user = self.get_object()
-        EmailService.register_email(user)
-        return Response('лист з активацією було відправлено')
+        token = JWTService.create_token(user, ActivateToken)
+        url = f'http://localhost:3000/activate/{token}'
+        EmailService.register_email(user, url)
+        return Response({'token': str(token)}, status=status.HTTP_200_OK)
 
 
 class ActivateUserView(GenericAPIView):
@@ -79,8 +81,10 @@ class PasswordRecoveryView(GenericAPIView):
         except ValidationError:
             return Response({'error': 'Невірний формат email'}, status=status.HTTP_400_BAD_REQUEST)
         user = get_object_or_404(UserModel, email=data['email'])
-        EmailService.password_recovery(user)
-        return Response('Password change request sent', status=status.HTTP_200_OK)
+        token = JWTService.create_token(user, PasswordRecoveryToken)
+        url = f'http://localhost:3000/recovery-password/{token}'
+        EmailService.password_recovery(user, url)
+        return Response({'token': str(token)}, status=status.HTTP_200_OK)
 
 
 class PasswordChangeView(GenericAPIView):

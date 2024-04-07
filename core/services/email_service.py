@@ -20,14 +20,14 @@ class EmailService:
         msg.send()
 
     @classmethod
-    def register_email(cls, user):
+    def register_email(cls, user, url):
         token = JWTService.create_token(user, ActivateToken)
-        url = f'http://localhost:3000/activate/{token}'
+        # url = f'http://localhost:3000/activate/{token}'
         cls.send_email(user.email, 'register.html', {'name': user.name, 'url': url}, 'Register')
 
     @classmethod
-    def password_recovery(cls, user):
+    def password_recovery(cls, user, url):
         token = JWTService.create_token(user, PasswordRecoveryToken)
-        url = f'http://localhost:3000/recovery-password/{token}'
+        # url = f'http://localhost:3000/recovery-password/{token}'
         cls.send_email(user.email, 'password_recovery.html', {'name': user.name, 'url': url}, 'Password '
                                                                                                       'recovery')
