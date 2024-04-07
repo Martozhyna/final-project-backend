@@ -15,6 +15,9 @@ UserModel = get_user_model()
 
 
 class UserMeView(ListAPIView):
+    """
+        Get me
+    """
 
     def get(self, *args, **kwargs):
         user = self.request.user
@@ -23,11 +26,17 @@ class UserMeView(ListAPIView):
 
 
 class UsersListView(ListAPIView):
+    """
+        Get all users
+    """
     queryset = UserModel.objects.all()
     serializer_class = UserSerializer
 
 
 class UserOrdersStatisticView(APIView):
+    """
+        Get statistics of each user on the status of their own applications
+    """
     serializer_class = OrdersSerializers
 
     def get(self, request, *args, **kwargs):
@@ -54,12 +63,14 @@ class UserOrdersStatisticView(APIView):
 
 
 class UserBanView(GenericAPIView):
+    """
+        Ban user
+    """
     queryset = UserModel.objects.all()
     permission_classes = (IsSuperuser,)
 
     def patch(self, *args, **kwargs):
         user = self.get_object()
-
         if user.is_staff:
             return Response('ви не можете заблокувати самого себе', status=status.HTTP_400_BAD_REQUEST)
         if user.is_active:
@@ -71,6 +82,9 @@ class UserBanView(GenericAPIView):
 
 
 class UserUnbanView(GenericAPIView):
+    """
+        Unban user
+    """
     queryset = UserModel.objects.all()
     permission_classes = (IsSuperuser,)
 

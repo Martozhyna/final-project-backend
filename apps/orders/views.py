@@ -1,22 +1,24 @@
 import os
 import tempfile
+from datetime import datetime, timedelta
+
+from django.db.models import Q
+from django.http import HttpResponse
 
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
-from django_filters import rest_framework as filters
+
 import pandas as pd
-from django.http import HttpResponse
-from django.db.models import Q
-from datetime import datetime, timedelta
+from django_filters import rest_framework as filters
 
 from apps.comments.serializers import CommentSerializer
 from apps.groups.models import GroupsModel
+from apps.groups.serializers import GroupsSerializer
 from apps.orders.filters import OrderFilter
 from apps.orders.models import OrdersModel
-from apps.orders.serializers import OrdersSerializers, OrdersExelSerializer
-from apps.groups.serializers import GroupsSerializer
+from apps.orders.serializers import OrdersExelSerializer, OrdersSerializers
 
 
 class OrdersListCreateView(ListCreateAPIView):
@@ -226,6 +228,9 @@ class OrdersExcelTable(ListAPIView):
 
 
 class OrdersStatusStatisticView(ListAPIView):
+    """
+        Get all status statistic
+    """
     queryset = OrdersModel.objects.all()
     serializer_class = OrdersSerializers
 
@@ -252,4 +257,4 @@ class OrdersStatusStatisticView(ListAPIView):
         order_statistic.append(
             {'total': total, 'agree': agree, 'disagree': disagree, 'in_work': in_work, 'dubbing': dubbing, 'new': new})
 
-        return Response(order_statistic)
+        return Response(order_statistic, status=status.HTTP_200_OK)
