@@ -71,14 +71,17 @@ class UserBanView(GenericAPIView):
 
     def patch(self, *args, **kwargs):
         user = self.get_object()
+        response_data = {}
         if user.is_staff:
-            return Response('ви не можете заблокувати самого себе', status=status.HTTP_400_BAD_REQUEST)
+            response_data[user.id] = {'error': 'ви не можете заблокувати самого себе'}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
         if user.is_active:
             user.is_active = False
             user.save()
             serializer = UserSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response('цей користувач уже заблокований', status=status.HTTP_400_BAD_REQUEST)
+        response_data[user.id] = {'error': 'цей користувач уже заблокований'}
+        return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserUnbanView(GenericAPIView):
@@ -90,11 +93,13 @@ class UserUnbanView(GenericAPIView):
 
     def patch(self, *args, **kwargs):
         user = self.get_object()
+        response_data = {}
 
         if user.is_staff:
-            return Response('ви не були заблоковані', status=status.HTTP_400_BAD_REQUEST)
+            response_data[user.id] = {'error': 'ви не були заблоковані'}
         if user.is_active:
-            return Response('цей користувач уже розблокований', status=status.HTTP_400_BAD_REQUEST)
+            response_data[user.id] = {'error': 'цей користувач уже розблокований'}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
         user.is_active = True
         user.save()
         serializer = UserSerializer(user)
