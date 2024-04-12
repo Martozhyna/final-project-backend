@@ -52,11 +52,7 @@ class ActivateUserView(GenericAPIView):
 
     def post(self, *args, **kwargs):
         token = kwargs['token']
-        try:
-            user = JWTService.validate_token(token, ActivateToken)
-        except JWTException:
-            return Response({'error': 'посилання за яким ви перейшли - уже не існує'},
-                            status=status.HTTP_400_BAD_REQUEST)
+        user = JWTService.validate_token(token, ActivateToken)
         user.is_active = True
         data = self.request.data
         serializer = AuthPasswordSerializer(data=data)
