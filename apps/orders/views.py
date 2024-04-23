@@ -75,6 +75,9 @@ class OrdersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
                     serializer.is_valid(raise_exception=True)
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
+                if not orders_user:
+                    order.manager = orders_manager
+                    order.save()
                 order.group = group
                 order.save()
                 # serializer = OrdersSerializers(order)
@@ -90,6 +93,9 @@ class OrdersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
                                 status=status.HTTP_400_BAD_REQUEST)
 
         if (not orders_user or orders_user == orders_manager) and not group_title:
+            if not orders_user:
+                order.manager = orders_manager
+                order.save()
             serializer = OrdersSerializers(order, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
