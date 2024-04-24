@@ -64,13 +64,21 @@ class OrdersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         orders_manager = self.request.user.surname  # залогінений юзер
         group_title = request.data.get('group', False)  # група яку ми відправляємо
         serializer_group = GroupsSerializer
+        data = self.request.data
 
         if (not orders_user or orders_user == orders_manager) and group_title:
             try:
                 group = GroupsModel.objects.get(
                     title=group_title)  # група яка є в списку і співпадає з тою, що ми відправляємо
-                print(group.id)
                 if group == order.group:
+                    if data['status'] and data['status'] == 'New':
+                        print(data['status'])
+                        order.manager = ''
+                        order.save()
+                    else:
+                        order.manager = orders_manager
+                        order.status = 'In work'
+                        order.save()
                     serializer = OrdersSerializers(order, data=request.data, partial=True)
                     serializer.is_valid(raise_exception=True)
                     serializer.save()
@@ -90,6 +98,13 @@ class OrdersRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
                                 status=status.HTTP_400_BAD_REQUEST)
 
         if (not orders_user or orders_user == orders_manager) and not group_title:
+            if data['status'] and data['status'] == 'New':
+                order.manager = ''
+                order.save()
+            else:
+                order.manager = orders_manager
+                order.status = 'In work'
+                order.save()
             serializer = OrdersSerializers(order, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()

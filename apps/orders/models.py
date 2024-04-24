@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
+from django.core import validators as V
 from django.db import models
 
-from apps.users.models import UserModel as User
-from apps.groups.models import GroupsModel
 from core.enums.regex_enum import RegEx
-from django.core import validators as V
+
+from apps.groups.models import GroupsModel
+from apps.users.models import UserModel as User
 
 UserModel: User = get_user_model()
 
